@@ -49,17 +49,16 @@ Rather than extracting the pieces of the tuple one by one (i.e., `lotteryType.0`
 
 ```swift
 // create a mirror of the tuple
-let lotteryMirror = reflect(lotteryTuple)
+let lotteryMirror = Mirror(reflecting: lotteryTuple)
 
 // loop over the elements of the mirror to build an array
 var lotteryArray: [Int] = []
-for i in 0..<lotteryMirror.count {
-    let (index, mirror) = lotteryMirror[i]
-    if let number = mirror.value as? Int {
+for child in lotteryMirror.children {
+    if let number = child.value as? Int {
         lotteryArray.append(number)
     }
 }
-println(lotteryArray)   // [4, 8, 15, 16, 23, 42]
+print(lotteryArray)   // [4, 8, 15, 16, 23, 42]
 ```
 
 Not bad.
@@ -84,7 +83,7 @@ Now we can quite simply print all the logical children of any instance:
 
 ```swift
 let printChild: (String, MirrorType) -> () = {
-    println("\($0): \($1.value)")
+    print("\($0): \($1.value)")
 }
 
 mapReflection(lotteryTuple, printChild)
@@ -218,7 +217,7 @@ That's it! The Playground now uses our custom representation instead of the defa
 
 ![Custom WWDCSession Representation](http://nshipster.s3.amazonaws.com/mirrortype-custom.gif)
 
-> In the absence of `Printable` conformance, `println()` and `toString()` will also pull the string representation from an instance's mirror.
+> In the absence of `Printable` conformance, `print()` and `toString()` will also pull the string representation from an instance's mirror.
 
 
 * * *
